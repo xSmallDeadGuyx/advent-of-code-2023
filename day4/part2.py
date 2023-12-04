@@ -23,8 +23,7 @@ copies = [1 for x in winnings]
 
 for i in range(len(winnings)):
 	if winnings[i] > 0:
-		for k in range(copies[i]):
-			for j in range(winnings[i]):
-				copies[i + j + 1] += 1
+		for j in range(winnings[i]):
+			copies[i + j + 1] += copies[i]
 
 print(sum(copies))
