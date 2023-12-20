@@ -36,10 +36,15 @@ for conv in convs.keys():
 # LCM of all 4 cycle numbers is our answer.
 
 cycles = {}
-cycles['qx'] = memories['qx'].copy()
-cycles['db'] = memories['db'].copy()
-cycles['vc'] = memories['vc'].copy()
-cycles['gf'] = memories['gf'].copy()
+
+# A single convolution combines the 4 cycles then outputs to rx, find that.
+for conv, targets in convs.items():
+	if 'rx' in targets:
+		for c in memories[conv].keys():
+			# Each input to this convolution is an inverter, we want the convolution _before_ the inverter which is the main counter part.
+			pre_inverter = list(memories[c].keys())[0]
+
+			cycles[pre_inverter] = memories[pre_inverter].copy()
 
 i = 0
 while i < 2048:
@@ -51,9 +56,6 @@ while i < 2048:
 
 	while len(queue) > 0:
 		f, t, p = queue.pop(0)
-
-		if t == 'zl' and p == 0:
-			print('zl', i)
 
 		if t in ffs:
 			if p == 0:
